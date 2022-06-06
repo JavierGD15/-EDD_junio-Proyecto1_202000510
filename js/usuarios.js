@@ -42,25 +42,27 @@ class Lista {
         while (actual != detener) {
             console.log(actual.dpi + " " + actual.nombre + " " + actual.usuario + " " + actual.correo + " " + actual.rol + " " + actual.contraseña + " " + actual.telefono);
             actual = actual.siguiente;
+
         }
     }
 
     //leer json
     leerJson() {
+        
         var xhttp = new XMLHttpRequest();
-       
-        
-        
+
         xhttp.onreadystatechange = function () {
             if (this.readyState == 4 && this.status == 200) {
                 console.log(this.responseText);
-            }else{
+            }
+            else{
+                console.log("error");
                 console.log(this.readyState);
                 console.log(this.status);
             }
         };
         xhttp.open("GET", "usuarios.json", true);
-        xhttp.send();
+       
         
     }
 }
