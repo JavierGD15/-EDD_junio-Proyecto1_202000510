@@ -42,7 +42,7 @@ class Lista {
         while (actual != detener) {
             console.log(actual.dpi + " " + actual.nombre + " " + actual.usuario + " " + actual.correo + " " + actual.rol + " " + actual.contraseña + " " + actual.telefono);
             actual = actual.siguiente;
-
+            
         }
     }
 
@@ -62,7 +62,7 @@ class Lista {
             }
         };
         xhttp.open("GET", "usuarios.json", true);
-       
+        xhttp.send();
         
     }
 }
