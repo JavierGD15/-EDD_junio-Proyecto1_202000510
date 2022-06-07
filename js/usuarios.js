@@ -1,4 +1,4 @@
-alert("hola mundo");
+
 class Nodo {
     constructor(dpi, nombre, usuario, correo, rol, contraseña, telefono) {
         this.dpi = dpi;
@@ -38,7 +38,7 @@ class Lista {
     imprimir() {
         var actual = this.primero.siguiente;
         var detener = this.primero;
-
+        console.log(detener.dpi + " " + detener.nombre + " " + detener.usuario + " " + detener.correo + " " + detener.rol + " " + detener.contraseña + " " + detener.telefono);
         while (actual != detener) {
             console.log(actual.dpi + " " + actual.nombre + " " + actual.usuario + " " + actual.correo + " " + actual.rol + " " + actual.contraseña + " " + actual.telefono);
             actual = actual.siguiente;
@@ -46,28 +46,34 @@ class Lista {
         }
     }
 
-    //leer json
-    leerJson() {
-        
+    leerjson(){
         var xhttp = new XMLHttpRequest();
-
-        xhttp.onreadystatechange = function () {
+        xhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
-                console.log(this.responseText);
-            }
-            else{
-                console.log("error");
-                console.log(this.readyState);
-                console.log(this.status);
+                var json = JSON.parse(this.responseText);
+                for (var i = 0; i < json.length; i++) {
+                    lista.insertar(json[i].dpi, json[i].nombre_completo, json[i].nombre_usuario, json[i].correo, json[i].rol, json[i].contrasenia, json[i].telefono);
+                    
+                }
+                lista.imprimir();
             }
         };
         xhttp.open("GET", "usuarios.json", true);
         xhttp.send();
+
         
+      
+
     }
+   
 }
 
+
+
+
+
 var lista = new Lista();
-lista.leerJson();
+
+lista.leerjson();
 
 //lista.imprimir();
