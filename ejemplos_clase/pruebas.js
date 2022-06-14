@@ -23,7 +23,7 @@ class Lista {
         this.ultimo = null;
     }
     insertar(fila, columna) {
-        var nuevo = new Nodo(null, null, null, null, fila, columna, null, null);
+        var nuevo = new Nodo("", "", "", "", fila, columna, "", "");
         if (this.primero == null) {
             this.primero = nuevo;
             this.ultimo = nuevo;
@@ -123,9 +123,13 @@ class Lista {
         for (var j = 1; j < columna; j++) {
             nodo = nodo.derecha;
         }
+        console.log(nodo.fila + " " + nodo.columna);
+        
         while(nodo.abajo != null){
+
             nodo.derecha = null;
             nodo = nodo.abajo;
+            
         }
 
     }
@@ -146,34 +150,28 @@ class Lista {
         var conexiones ="";
         var nodos ="";
         
-
         for (var i = 1; i < fila+1; i++) {
+            
             //filas
             for (var j = 1; j < columna+1; j++) {
                 var nodo = this.nueva_busqueda(i, j);
+               
+                
                 if(nodo == null){
                     continue;
                 }else{
-                    if(nodo.nombre_libro != null){
-                        nodos += "nodo" + nodo.fila + nodo.columna + "[label=\"" + nodo.nombre_libro + "\"];\n";
-                    }else{
-                        nodos+=  "N" + nodo.fila+""+ nodo.columna+ "[label=\"" + " " + "\" ];\n";
-                    }
-
                     
+                        nodos += "N" + (nodo.fila+50) + ""+nodo.columna + "[label=\"" + nodo.nombre_libro + "\"];\n";
                     
-
                     if(nodo.izquierda != null){
                     
-                        conexiones += "N" + nodo.fila+""+ nodo.columna + " -> N" + nodo.izquierda.fila+""+ nodo.izquierda.columna + ";\n"
+                        conexiones += "N" + (nodo.fila+50)+""+ nodo.columna + " -> N" + (nodo.izquierda.fila+50)+""+ nodo.izquierda.columna + ";\n"
                     }
                     if(nodo.derecha != null){
-                        conexiones += "N" + nodo.fila+""+ nodo.columna + " -> N" + nodo.derecha.fila+""+ nodo.derecha.columna + ";\n"
-                    }
-                    
+                        conexiones += "N" + (nodo.fila+50)+""+ nodo.columna + " -> N" + (nodo.derecha.fila+50)+""+ nodo.derecha.columna + ";\n"
+                    }                    
 
-                }
-                
+                }                
                 
             }
             
@@ -183,22 +181,17 @@ class Lista {
             //columnas
             for (var j = 1; j < columna+1; j++) {
                 var nodo = this.nueva_busqueda(i, j);
+                
                 if(nodo == null){
                     continue;
                 }else{
-                    if(nodo.nombre_libro != null){
-                        nodos += "nodo" + nodo.fila + nodo.columna + "[label=\"" + nodo.nombre_libro + "\"];\n";
-                    }else{
-                        nodos+=  "N" + nodo.fila+""+ nodo.columna+ "[label=\"" + " " + "\" ];\n";
-                    }
                     
                     if(nodo.arriba != null){
-                        conexiones += "N" + nodo.fila+""+ nodo.columna + " -> N" + nodo.arriba.fila+""+ nodo.arriba.columna + ";\n"
+                        conexiones += "N" + (nodo.fila+50)+""+ nodo.columna + " -> N" + (nodo.arriba.fila+50)+""+ nodo.arriba.columna + ";\n"
                     }
                     if(nodo.abajo != null){
-                        conexiones += "N" + nodo.fila+""+ nodo.columna + " -> N" + nodo.abajo.fila+""+ nodo.abajo.columna + ";\n"
-                    }
-                    
+                        conexiones += "N" + (nodo.fila+50)+""+ nodo.columna + " -> N" + (nodo.abajo.fila+50)+""+ nodo.abajo.columna + ";\n"
+                    }                    
                     codigodot += "\n"+conexiones+"\n"
                     var conexiones ="";
 
@@ -216,6 +209,9 @@ class Lista {
         //agregando conexiones
         codigodot += "\n}"
         console.log(codigodot)
+
+        d3.select("#lienzo1").graphviz()
+        .renderDot(codigodot)
         
     }
 
@@ -257,12 +253,12 @@ class Lista {
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
+                
                 var json = JSON.parse(this.responseText);
                 for (var i = 0; i < json.length; i++) {
-
-                    console.log(json[i].fila+" "+json[i].columna);
+                   
                     var ayuda = lista.nueva_busqueda(json[i].fila, json[i].columna);
-
+                    
                     if(ayuda != null){
 
                         ayuda.isbn = json[i].isbn;
@@ -273,13 +269,19 @@ class Lista {
                         ayuda.columna = json[i].columna;
                         ayuda.paginas = json[i].paginas;
                         ayuda.categoria = json[i].categoria;
+
                     }
                 //this.agregar_libros(json[i].isbm, json[i].nombre_autor, json[i].nombre_libro, json[i].cantidad, json[i].fila, json[i].columna, json[i].paginas, json[i].categoria);               
                 }
             }
-        };      
+        };              
+
         xhttp.open("GET", "libros.json", true);
         xhttp.send();
+        var nodo = this.nueva_busqueda(5, 10);
+                
+        this.graficar_octogonal(25,25);
+        
 
         }
     
@@ -289,11 +291,16 @@ class Lista {
 var lista = new Lista();
 lista.crearMatriz(25,25);
 lista.unir_nodos(25,25);
-lista.imprimirMatriz(25,25);
-//lista.eliminar_finales(25);
+
+lista.eliminar_finales(25);
+//lista.imprimirMatriz(25,25);
 //var nodo = lista.nueva_busqueda(5,4);
 //console.log(nodo.fila + " " + nodo.columna);
-//lista.leerJson();
-//lista.graficar_octogonal(25,25);
+lista.leerJson();
+
+
+
+
+
 //lista.imprimirMatriz(25,25);
 
