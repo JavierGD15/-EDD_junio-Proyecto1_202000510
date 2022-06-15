@@ -79,10 +79,8 @@ class Lista {
             for (var j = 1; j < columna+1; j++) {
 
                 var nodo1 = this.buscar_nodo(i, j);
-
                 //izquierda
-                try{
-                    
+                try{                    
                     var nodo2 = this.buscar_nodo(i, j-1);
                     if(nodo2 != null){
                     nodo1.izquierda = nodo2;}
@@ -148,20 +146,18 @@ class Lista {
     graficar_octogonal(fila, columna){
         var codigodot = "digraph G{\nlabel=\" Clasificación Fantasia \";\nnode [shape=box];\n";        
         var conexiones ="";
-        var nodos ="";
+        var nodos ="";    
         
-        for (var i = 1; i < fila+1; i++) {
-            
+        for (var i = 1; i < fila+1; i++) {            
             //filas
             for (var j = 1; j < columna+1; j++) {
-                var nodo = this.nueva_busqueda(i, j);
+                var nodo = this.nueva_busqueda(i, j);  
                
-                
                 if(nodo == null){
                     continue;
                 }else{
-                    
-                        nodos += "N" + (nodo.fila+50) + ""+nodo.columna + "[label=\"" + nodo.nombre_libro + "\"];\n";
+                                        
+                    nodos += "N" + (nodo.fila+50) + ""+nodo.columna + "[label=\"" + nodo.nombre_libro + "\"];\n";
                     
                     if(nodo.izquierda != null){
                     
@@ -174,7 +170,7 @@ class Lista {
                 }                
                 
             }
-            
+             
             codigodot += "{rank=same;\n"+conexiones+"\n}\n";
             var conexiones ="";
 
@@ -184,8 +180,7 @@ class Lista {
                 
                 if(nodo == null){
                     continue;
-                }else{
-                    
+                }else{                    
                     if(nodo.arriba != null){
                         conexiones += "N" + (nodo.fila+50)+""+ nodo.columna + " -> N" + (nodo.arriba.fila+50)+""+ nodo.arriba.columna + ";\n"
                     }
@@ -194,7 +189,6 @@ class Lista {
                     }                    
                     codigodot += "\n"+conexiones+"\n"
                     var conexiones ="";
-
                 }
                 
                 
@@ -208,7 +202,7 @@ class Lista {
         
         //agregando conexiones
         codigodot += "\n}"
-        console.log(codigodot)
+        //console.log(codigodot)
 
         d3.select("#lienzo1").graphviz()
         .renderDot(codigodot)
@@ -228,79 +222,57 @@ class Lista {
            
     }
 
-    agregar_libros(isbn, nombre_autor, nombre_libro, cantidad, fila_json, columna_json, paginas, categoria){
-
-        var nodo = this.primero;
-        for (var j = 1; j < columna_json; j++) {
-            nodo = nodo.derecha;
-        }
-        for (var i = 1; i < fila_json; i++) {
-            nodo = nodo.abajo;
-        }
-
-        nodo.isbn = isbn;
-        nodo.nombre_autor = nombre_autor;
-        nodo.nombre_libro = nombre_libro;
-        nodo.cantidad = cantidad;
-        nodo.fila = fila_json;
-        nodo.columna = columna_json;
-        nodo.paginas = paginas;
-        nodo.categoria = categoria;
-
-    }
-
     leerJson(){
+        
+        var ayuda_fila = 0;
+        var ayuda_columna = 0;
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
                 
                 var json = JSON.parse(this.responseText);
                 for (var i = 0; i < json.length; i++) {
-                   
-                    var ayuda = lista.nueva_busqueda(json[i].fila, json[i].columna);
-                    
-                    if(ayuda != null){
+                    if(json[i].categoria == "Fantasia"){
+                       
+                        if(ayuda_fila <json[i].fila){
+                            if(ayuda_columna < json[i].columna){
+                                ayuda_fila = json[i].fila;
+                                ayuda_columna = json[i].columna;
+                            }else{
+                                ayuda_fila = json[i].fila;
+                            }
+                        }
+                        else if(ayuda_columna < json[i].columna){
+                            ayuda_columna = json[i].columna;
+                            }
+                            else{
+                                continue;
+                            }
 
-                        ayuda.isbn = json[i].isbn;
-                        ayuda.nombre_autor = json[i].nombre_autor;
-                        ayuda.nombre_libro = json[i].nombre_libro;
-                        ayuda.cantidad = json[i].cantidad;
-                        ayuda.fila = json[i].fila;
-                        ayuda.columna = json[i].columna;
-                        ayuda.paginas = json[i].paginas;
-                        ayuda.categoria = json[i].categoria;
+                            lista.crearMatriz(ayuda_fila,ayuda_columna);
+                            lista.unir_nodos(ayuda_fila,ayuda_columna);
+                            lista.eliminar_finales(ayuda_fila);
+                            lista.leerJson();
 
+                        }
+                        
                     }
-                //this.agregar_libros(json[i].isbm, json[i].nombre_autor, json[i].nombre_libro, json[i].cantidad, json[i].fila, json[i].columna, json[i].paginas, json[i].categoria);               
-                }
+                    
+                     
             }
-        };              
-
+        };      
         xhttp.open("GET", "libros.json", true);
         xhttp.send();
-        var nodo = this.nueva_busqueda(5, 10);
-                
-        this.graficar_octogonal(25,25);
         
-
         }
     
 }
 
 
 var lista = new Lista();
-lista.crearMatriz(25,25);
-lista.unir_nodos(25,25);
-
-lista.eliminar_finales(25);
-//lista.imprimirMatriz(25,25);
-//var nodo = lista.nueva_busqueda(5,4);
-//console.log(nodo.fila + " " + nodo.columna);
 lista.leerJson();
-
-
-
-
-
-//lista.imprimirMatriz(25,25);
+// lista.crearMatriz(25,25);
+// lista.unir_nodos(25,25);
+// lista.eliminar_finales(25);
+// lista.leerJson();
 
