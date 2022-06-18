@@ -1,4 +1,3 @@
-
 class Nodo {
     constructor(dpi, nombre, usuario, correo, rol, contraseña, telefono) {
         this.dpi = dpi;
@@ -58,22 +57,48 @@ class Lista {
                 lista.imprimir();
             }
         };
-        xhttp.open("GET", "usuarios.json", true);
-        xhttp.send();
-
-        
+        xhttp.open("GET", "../usuarios.json", true);
+        xhttp.send();        
       
 
+    }
+
+    graficar_lista(){
+        var codigodot = "digraph G{\nlabel=\" Clasificación Usuarios \";\nnode [shape=box];\n";
+        var actual = this.primero.siguiente;
+        var detener = this.primero;
+        var recto = "";
+        recto += detener.dpi + " [label=\"" + detener.nombre +"\n"+ detener.correo + "\"];";
+        while (actual != detener) {
+            codigodot += actual.dpi + " [label=\"" + actual.nombre +"\n"+ actual.correo + "\"];";
+            recto += actual.dpi + " -> " + actual.siguiente.dpi+ ";";
+            actual = actual.siguiente;
+        }
+        codigodot += "{rank=same;\n"+recto+"\n}\n";
+        codigodot += "}";
+        d3.select("#lienzo2").graphviz()
+        .renderDot(codigodot)
     }
    
 }
 
+var formulario = document.getElementById("lienzo2");
+formulario.addEventListener('submit', function(e){
+    e.preventDefault();
+    console.log("Formulario enviado");
+    //recibir documento de formulario
+    let file = document.querySelector('#file');
+    let reader = new FileReader();
+    reader.readAsText(file.files[0]);
+    reader.onload = function(e){
+        let contenido = e.target.result;
+        var json = JSON.parse(contenido);
+        var lista = new Lista();
 
+        for (var i = 0; i < json.length; i++) {
+            lista.insertar(json[i].dpi, json[i].nombre_completo, json[i].nombre_usuario, json[i].correo, json[i].rol, json[i].contrasenia, json[i].telefono);
+        }
+        lista.graficar_lista();
+    }
 
-
-
-var lista = new Lista();
-
-lista.leerjson();
-
-//lista.imprimir();
+})

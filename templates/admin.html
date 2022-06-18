@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menù con tabs | Html - Css</title>
+    <link rel="stylesheet" href="../css/admin.css">
+    
+    
+</head>
+<body>
+    <a href="/" class="cerrar">Cerrar Sesión</a>
+    <a href="/admin/reportes" class="reporte">Crear Reporte</a>  
+       
+    <div class="container" >
+        <div class="lbl-menu" >
+            <label for="radio1">Usuarios</label>
+            <label for="radio2">Libros-Fantasia</label>
+            <label for="radio3">Autores</label>
+            <label for="radio4">Libros-Thriller</label>
+        </div>
+        
+        <div class="content">
+           
+            <input type="radio" name="radio" id="radio1" checked>
+            <div class="tab1" id="lienzo2" >
+                <h2>Usuarios</h2>             
+                <br>
+                <script src="//d3js.org/d3.v5.min.js"></script>
+                <script src="https://unpkg.com/@hpcc-js/wasm@0.3.11/dist/index.min.js"></script>
+                <script src="https://unpkg.com/d3-graphviz@3.0.5/build/d3-graphviz.js"></script>
+                <script type="text/javascript" src="../js/usuarios.js"></script>                
+                <br>
+                <form  id="formulario" >    
+                    
+                    <input type="file"   type="file" id="file" accept=".json">
+                    <button class="btn btn-primary" type="submit">Enviar</button>
+                </form>                                   
+            </div>
+
+            
+            <input type="radio" name="radio" id="radio2">
+          
+
+            <div class="tab2" id="lienzo1">
+                <h2>Libros-Fantasia</h2>                
+                <script src="//d3js.org/d3.v5.min.js"></script>
+                <script src="https://unpkg.com/@hpcc-js/wasm@0.3.11/dist/index.min.js"></script>
+                <script src="https://unpkg.com/d3-graphviz@3.0.5/build/d3-graphviz.js"></script>
+                <script type="text/javascript" src="../js/libros_octogonal.js"></script>                
+                <br>
+                <form  id="formulario" >                        
+                    <input type="file"  type="file" id="file1" accept=".json">
+                    <button class="btn btn-primary" type="submit">Enviar</button>
+                </form>  
+
+            </div>
+               
+
+
+
+            <input type="radio" name="radio" id="radio3">
+            <div class="tab3">
+                <h2>Autores</h2>
+                <table style="border-collapse: collapse" bordercolor="#111111" width="900">
+                    <tr>
+                        <th>Tipo</th>
+                        <th>Url</th>
+                        <th>Fecha</th>
+                        <th>Categoria</th>
+                        <th>Likes</th>
+                        <th>Creador</th>
+                        <th colspan="2">Ediciones</th>
+                    </tr>
+                    {%for us in images%}
+                    <tr>
+                        <td>Imagen</td>
+                        <td>{{us["url"]}}</td>
+                        <td>{{us["date"]}}</td>
+                        <td>{{us["category"]}}</td>
+                        <td>{{us["likes"]}}</td>
+                        <td>{{us["usuario"]}}</td>
+
+                        <form action="/inicio/editar-publicaciones" method="post">  
+                            <input type="hidden" name="tipo" value="image">   
+                            <input type="hidden" name="url" value="{{us["url" ]}}"> 
+                            <input type="hidden" name="date" value="{{us["date" ]}}">
+                            <input type="hidden" name="category" value="{{us["category" ]}}"> 
+                            <input type="hidden" name="likes" value="{{us["likes" ]}}"> 
+                            <input type="hidden" name="usuario" value="{{us["usuario" ]}}">                             
+                            <td><input class="myButton" type="submit" value="Editar" ></td> 
+                        </form>   
+                        <form action="/inicio/eliminar-publicaciones-images" method="post"> 
+                            <input type="hidden" name="usuario" value="{{us["usuario" ]}}">
+                            <input type="hidden" name="url" value="{{us["url" ]}}"> 
+                            <input type="hidden" name="date" value="{{us["date" ]}}">  
+                            <td><input class="myButton" type="submit" value="Eliminar" ></td>
+                        </form>
+                                               
+                       
+                       
+                        
+                        
+                        
+                    </tr>
+                    {%endfor%}
+
+
+
+
+                    {%for us in videos%}
+                    <tr>
+                        <td>Video</td>
+                        <td>{{us["url"]}}</td>
+                        <td>{{us["date"]}}</td>
+                        <td>{{us["category"]}}</td>
+                        <td>{{us["likes"]}}</td>
+                        <td>{{us["usuario"]}}</td>
+
+                        <form action="/inicio/editar-publicaciones" method="post">
+                            <input type="hidden" name="tipo" value="video">   
+                            <input type="hidden" name="url" value="{{us["url" ]}}"> 
+                            <input type="hidden" name="date" value="{{us["date" ]}}">
+                            <input type="hidden" name="category" value="{{us["category" ]}}"> 
+                            <input type="hidden" name="likes" value="{{us["likes" ]}}"> 
+                            <input type="hidden" name="usuario" value="{{us["usuario" ]}}">                             
+                            <td><input class="myButton" type="submit" value="Editar" ></td> 
+                        </form>   
+                        <form action="/inicio/eliminar-publicaciones-videos" method="post"> 
+                            <input type="hidden" name="usuario" value="{{us["usuario" ]}}">
+                            <input type="hidden" name="url" value="{{us["url" ]}}"> 
+                            <input type="hidden" name="date" value="{{us["date" ]}}">  
+                            <td><input class="myButton" type="submit" value="Eliminar" ></td>
+                        </form>
+                                               
+                       
+                       
+                        
+                        
+                        
+                    </tr>
+                    {%endfor%}
+
+                </table>
+                <br>
+                <a class="myButton" href="/inicio/PDF-publicaciones" role="button">Exportar PDF</a>
+                <form  action="/inicio/JSON-usuarios" method="post" enctype="multipart/form-data" >     
+                    <input type="file"  name="src-file1" aria-label="Archivo" >
+                    <input class="myButton" type="submit" value="Enviar" >
+                </form>  
+
+
+            </div>
+            
+
+            <input type="radio" name="radio" id="radio4">      
+            <div class="tab4" id="lienzo3">
+                <h2>Libros-Thriller</h2>                
+                <script src="//d3js.org/d3.v5.min.js"></script>
+                <script src="https://unpkg.com/@hpcc-js/wasm@0.3.11/dist/index.min.js"></script>
+                <script src="https://unpkg.com/d3-graphviz@3.0.5/build/d3-graphviz.js"></script>
+                <script type="text/javascript" src="../js/libros_dispersa.js"></script>                
+                <br>
+                <form  id="formulario" >                        
+                    <input type="file"   type="file" id="file2" accept=".json">
+                    <button class="btn btn-primary" type="submit">Enviar</button>
+                </form>  
+
+            </div>
+
+            
+        </div>
+    </div>
+</body>
+</html>
+
+
+
+
+
+

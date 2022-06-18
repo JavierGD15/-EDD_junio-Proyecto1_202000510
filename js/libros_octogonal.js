@@ -1,5 +1,5 @@
 
-class Nodo {
+class Nodo_libros {
     constructor(isbn, nombre_autor, nombre_libro, cantidad, fila, columna, paginas, categoria) {
         this.isbn = isbn;
         this.nombre_autor = nombre_autor;
@@ -17,13 +17,13 @@ class Nodo {
     }
 }
 
-class Lista {
+class Lista_libros {
     constructor() {
         this.primero = null;
         this.ultimo = null;
     }
     insertar(fila, columna) {
-        var nuevo = new Nodo("", "", "", "", fila, columna, "", "");
+        var nuevo = new Nodo_libros("", "", "", "", fila, columna, "", "");
         if (this.primero == null) {
             this.primero = nuevo;
             this.ultimo = nuevo;
@@ -55,61 +55,61 @@ class Lista {
     imprimirMatriz(fila, columna) {
         for (var i = 1; i < fila+1; i++) {
             for (var j = 1; j < columna+1; j++) {
-                var nodo = this.buscar_nodo(i, j);
+                var Nodo_libros = this.buscar_Nodo_libros(i, j);
 
-                if (nodo.izquierda != null){
-                    console.log("izquierda: " + nodo.izquierda.fila + " " + nodo.izquierda.columna );            
+                if (Nodo_libros.izquierda != null){
+                    console.log("izquierda: " + Nodo_libros.izquierda.fila + " " + Nodo_libros.izquierda.columna );            
                 }
-                if(nodo.derecha != null){
-                    console.log("derecha: " + nodo.derecha.fila + " " + nodo.derecha.columna );
+                if(Nodo_libros.derecha != null){
+                    console.log("derecha: " + Nodo_libros.derecha.fila + " " + Nodo_libros.derecha.columna );
                 }
-                if(nodo.arriba != null){
-                    console.log("arriba: " + nodo.arriba.fila + " " + nodo.arriba.columna );  
+                if(Nodo_libros.arriba != null){
+                    console.log("arriba: " + Nodo_libros.arriba.fila + " " + Nodo_libros.arriba.columna );  
                 }
-                if(nodo.abajo != null){
-                    console.log("abajo: " + nodo.abajo.fila + " " + nodo.abajo.columna );   
+                if(Nodo_libros.abajo != null){
+                    console.log("abajo: " + Nodo_libros.abajo.fila + " " + Nodo_libros.abajo.columna );   
                 }
                 
             }
     }
 }
 
-    unir_nodos(fila, columna) {
+    unir_Nodo_libross(fila, columna) {
         for (var i = 1; i < fila+1; i++) {
             for (var j = 1; j < columna+1; j++) {
 
-                var nodo1 = this.buscar_nodo(i, j);
+                var Nodo_libros1 = this.buscar_Nodo_libros(i, j);
                 //izquierda
                 try{                    
-                    var nodo2 = this.buscar_nodo(i, j-1);
-                    if(nodo2 != null){
-                    nodo1.izquierda = nodo2;}
+                    var Nodo_libros2 = this.buscar_Nodo_libros(i, j-1);
+                    if(Nodo_libros2 != null){
+                    Nodo_libros1.izquierda = Nodo_libros2;}
                 }catch(e){
-                    nodo1.izquierda = null;
+                    Nodo_libros1.izquierda = null;
                 }
                 //derecha
                 try{
-                    var nodo2 = this.buscar_nodo(i, j+1);
-                    if(nodo2 != null){
-                    nodo1.derecha = nodo2;}
+                    var Nodo_libros2 = this.buscar_Nodo_libros(i, j+1);
+                    if(Nodo_libros2 != null){
+                    Nodo_libros1.derecha = Nodo_libros2;}
                 }catch(e){
-                    nodo1.derecha = null;
+                    Nodo_libros1.derecha = null;
                 }
                 //arriba
                 try{
-                    var nodo2 = this.buscar_nodo(i-1, j);
-                    if(nodo2 != null){
-                    nodo1.arriba = nodo2;}
+                    var Nodo_libros2 = this.buscar_Nodo_libros(i-1, j);
+                    if(Nodo_libros2 != null){
+                    Nodo_libros1.arriba = Nodo_libros2;}
                 }catch(e){
-                    nodo1.arriba = null;
+                    Nodo_libros1.arriba = null;
                 }
                 //abajo
                 try{
-                    var nodo2 = this.buscar_nodo(i+1, j);
-                    if(nodo2 != null){
-                    nodo1.abajo = nodo2;}
+                    var Nodo_libros2 = this.buscar_Nodo_libros(i+1, j);
+                    if(Nodo_libros2 != null){
+                    Nodo_libros1.abajo = Nodo_libros2;}
                 }catch(e){
-                    nodo1.abajo = null;
+                    Nodo_libros1.abajo = null;
                 }
                 
             }
@@ -117,22 +117,22 @@ class Lista {
 
 }
     eliminar_finales(columna){
-        var nodo = this.primero;
+        var Nodo_libros = this.primero;
         for (var j = 1; j < columna; j++) {
-            nodo = nodo.derecha;
+            Nodo_libros = Nodo_libros.derecha;
         }
-        console.log(nodo.fila + " " + nodo.columna);
+        console.log(Nodo_libros.fila + " " + Nodo_libros.columna);
         
-        while(nodo.abajo != null){
+        while(Nodo_libros.abajo != null){
 
-            nodo.derecha = null;
-            nodo = nodo.abajo;
+            Nodo_libros.derecha = null;
+            Nodo_libros = Nodo_libros.abajo;
             
         }
 
     }
 
-    buscar_nodo(fila, columna) {
+    buscar_Nodo_libros(fila, columna) {
         var actual = this.primero;
         while (actual != null) {
             if (actual.fila == fila && actual.columna == columna) {
@@ -146,25 +146,51 @@ class Lista {
     graficar_octogonal(fila, columna){
         var codigodot = "digraph G{\nlabel=\" Clasificación Fantasia \";\nnode [shape=box];\n";        
         var conexiones ="";
-        var nodos ="";    
+        var Nodo_libross ="";    
         
-        for (var i = 1; i < fila+1; i++) {            
+        for (var i = 1; i < fila+1; i++) {    
+                       //columnas
+                       for (var j = 1; j < columna+1; j++) {
+                        var Nodo_libros = this.nueva_busqueda(i, j);
+                        
+                        if(Nodo_libros == null){
+                            continue;
+                        }else{                    
+                            if(Nodo_libros.arriba != null){
+                                conexiones += "N" + (Nodo_libros.fila+50)+""+ Nodo_libros.columna + " -> N" + (Nodo_libros.arriba.fila+50)+""+ Nodo_libros.arriba.columna + ";\n"
+                            }else{
+                                Nodo_libross += "colum" +j + "[label=\"" + j + "\"];\n";
+                                conexiones += "colum" + j + " -> N" + (Nodo_libros.fila+50)+""+ Nodo_libros.columna + ";\n"
+                            }
+                            
+                            if(Nodo_libros.abajo != null){
+                                conexiones += "N" + (Nodo_libros.fila+50)+""+ Nodo_libros.columna + " -> N" + (Nodo_libros.abajo.fila+50)+""+ Nodo_libros.abajo.columna + ";\n"
+                            }                    
+                            codigodot += "\n"+conexiones+"\n"
+                            var conexiones ="";
+                        }
+                        
+                        
+                    }        
             //filas
             for (var j = 1; j < columna+1; j++) {
-                var nodo = this.nueva_busqueda(i, j);  
+                var Nodo_libros = this.nueva_busqueda(i, j);  
                
-                if(nodo == null){
+                if(Nodo_libros == null){
                     continue;
                 }else{
                                         
-                    nodos += "N" + (nodo.fila+50) + ""+nodo.columna + "[label=\"" + nodo.nombre_libro + "\"];\n";
+                    Nodo_libross += "N" + (Nodo_libros.fila+50) + ""+Nodo_libros.columna + "[label=\"" + Nodo_libros.nombre_libro + "\"];\n";
                     
-                    if(nodo.izquierda != null){
+                    if(Nodo_libros.izquierda != null){
                     
-                        conexiones += "N" + (nodo.fila+50)+""+ nodo.columna + " -> N" + (nodo.izquierda.fila+50)+""+ nodo.izquierda.columna + ";\n"
+                        conexiones += "N" + (Nodo_libros.fila+50)+""+ Nodo_libros.columna + " -> N" + (Nodo_libros.izquierda.fila+50)+""+ Nodo_libros.izquierda.columna + ";\n"
+                    }else{
+                        Nodo_libross += "ayuda" +i + "[label=\"" + i + "\"];\n";
+                        conexiones += "ayuda" + i + " -> N" + (Nodo_libros.fila+50)+""+ Nodo_libros.columna + ";\n"
                     }
-                    if(nodo.derecha != null){
-                        conexiones += "N" + (nodo.fila+50)+""+ nodo.columna + " -> N" + (nodo.derecha.fila+50)+""+ nodo.derecha.columna + ";\n"
+                    if(Nodo_libros.derecha != null){
+                        conexiones += "N" + (Nodo_libros.fila+50)+""+ Nodo_libros.columna + " -> N" + (Nodo_libros.derecha.fila+50)+""+ Nodo_libros.derecha.columna + ";\n"
                     }                    
 
                 }                
@@ -174,36 +200,18 @@ class Lista {
             codigodot += "{rank=same;\n"+conexiones+"\n}\n";
             var conexiones ="";
 
-            //columnas
-            for (var j = 1; j < columna+1; j++) {
-                var nodo = this.nueva_busqueda(i, j);
-                
-                if(nodo == null){
-                    continue;
-                }else{                    
-                    if(nodo.arriba != null){
-                        conexiones += "N" + (nodo.fila+50)+""+ nodo.columna + " -> N" + (nodo.arriba.fila+50)+""+ nodo.arriba.columna + ";\n"
-                    }
-                    if(nodo.abajo != null){
-                        conexiones += "N" + (nodo.fila+50)+""+ nodo.columna + " -> N" + (nodo.abajo.fila+50)+""+ nodo.abajo.columna + ";\n"
-                    }                    
-                    codigodot += "\n"+conexiones+"\n"
-                    var conexiones ="";
-                }
-                
-                
-            }
+ 
             
             var conexiones ="";
         }
         
-        //agregando nodos
-        codigodot += nodos+"\n"
+        //agregando Nodo_libross
+        codigodot += Nodo_libross+"\n"
         
         //agregando conexiones
         codigodot += "\n}"
         //console.log(codigodot)
-
+        
         d3.select("#lienzo1").graphviz()
         .renderDot(codigodot)
         
@@ -211,14 +219,14 @@ class Lista {
 
     nueva_busqueda(fila, columna){
 
-        var nodo = this.primero;        
+        var Nodo_libros = this.primero;        
         for (var j = 1; j < columna; j++) {
-            nodo = nodo.derecha;
+            Nodo_libros = Nodo_libros.derecha;
         }
         for (var i = 1; i < fila; i++) {
-            nodo = nodo.abajo;
+            Nodo_libros = Nodo_libros.abajo;
         }
-        return nodo;
+        return Nodo_libros;
            
     }
 
@@ -231,7 +239,7 @@ class Lista {
                 
                 var json = JSON.parse(this.responseText);
                 for (var i = 0; i < json.length; i++) {
-                    if(json[i].categoria == "Thriller"){
+                    if(json[i].categoria == "Fantasia"){
                         for (var j = 1; j < json[i].columna; j++) {
                         
                             ayuda = ayuda.derecha;
@@ -251,20 +259,72 @@ class Lista {
                         }
                         
                     }
-                    lista.graficar_octogonal(25,25);  
+                    console.log("se logro");
+                    Lista_libros.graficar_octogonal(25,25);  
             }
         };      
-        xhttp.open("GET", "libros.json", true);
+        xhttp.open("GET", "../libros.json", true);
         xhttp.send();
+
         
+        }
+        agregar_Nodo_libros(isbm, nombre_autor, nombre_libro, cantidad, fila, columna, paginas, categoria){
+            var ayuda = this.primero;
+            for (var j = 1; j < columna; j++) {
+                ayuda = ayuda.derecha;
+            }
+            for (var i = 1; i < fila; i++) {
+                ayuda = ayuda.abajo;
+            }
+            ayuda.isbn = isbm;
+            ayuda.nombre_autor = nombre_autor;
+            ayuda.nombre_libro = nombre_libro;
+            ayuda.cantidad = cantidad;
+            ayuda.fila = fila;
+            ayuda.columna = columna;
+            ayuda.paginas = paginas;
+            ayuda.categoria = categoria;
+            
         }
     
 }
 
+var formulario = document.getElementById("lienzo1");
 
-var lista = new Lista();
-lista.crearMatriz(25,25);
-lista.unir_nodos(25,25);
-lista.eliminar_finales(25);
-lista.leerJson();
+formulario.addEventListener('submit', function(e){
+    e.preventDefault();
+    console.log("Formulario enviado");
+    //recibir documento de formulario
+    let file = document.querySelector('#file1');
+    let reader = new FileReader();
+    reader.readAsText(file.files[0]);
+    reader.onload = function(e){
+        //guardar documento
+        
 
+        let contenido = e.target.result;
+        var json = JSON.parse(contenido);
+        //crear json
+
+        localStorage.setItem("json", contenido);
+        
+        var Lista_libross = new Lista_libros();
+
+        Lista_libross.crearMatriz(25,25);
+        Lista_libross.unir_Nodo_libross(25,25);
+        Lista_libross.eliminar_finales(25);
+
+        for (var i = 0; i < json.length; i++) {
+            if(json[i].categoria == "Fantasia"){
+                console.log("entro");
+                Lista_libross.agregar_Nodo_libros(json[i].isbm, json[i].nombre_autor, json[i].nombre_libro, json[i].cantidad, json[i].fila, json[i].columna, json[i].paginas, json[i].categoria);                   
+            }
+        }
+        Lista_libross.graficar_octogonal(25,25);        
+        
+        
+
+        
+    }
+
+})

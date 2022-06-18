@@ -13,7 +13,6 @@ class Nodo {
         this.derecha = null;
         this.arriba = null;
         this.abajo = null;
-
     }
 }
 
@@ -144,65 +143,49 @@ class Lista {
     }
 
     graficar_octogonal(fila, columna){
-        var codigodot = "digraph G{\nlabel=\" Clasificación Fantasia \";\nnode [shape=box];\n";        
+        var codigodot = "digraph G{\nlabel=\" Clasificación Thriller \";\nnode [shape=box];\n";        
         var conexiones ="";
         var nodos ="";    
+        var conexiones_filas ="";
         
-        for (var i = 1; i < fila+1; i++) {            
-            //filas
-            for (var j = 1; j < columna+1; j++) {
-                var nodo = this.nueva_busqueda(i, j);  
-               
-                if(nodo == null){
-                    continue;
-                }else{
-                                        
-                    nodos += "N" + (nodo.fila+50) + ""+nodo.columna + "[label=\"" + nodo.nombre_libro + "\"];\n";
-                    
-                    if(nodo.izquierda != null){
-                    
-                        conexiones += "N" + (nodo.fila+50)+""+ nodo.columna + " -> N" + (nodo.izquierda.fila+50)+""+ nodo.izquierda.columna + ";\n"
-                    }
-                    if(nodo.derecha != null){
-                        conexiones += "N" + (nodo.fila+50)+""+ nodo.columna + " -> N" + (nodo.derecha.fila+50)+""+ nodo.derecha.columna + ";\n"
-                    }                    
-
-                }                
-                
-            }
-             
-            codigodot += "{rank=same;\n"+conexiones+"\n}\n";
-            var conexiones ="";
-
-            //columnas
-            for (var j = 1; j < columna+1; j++) {
-                var nodo = this.nueva_busqueda(i, j);
-                
-                if(nodo == null){
-                    continue;
-                }else{                    
-                    if(nodo.arriba != null){
-                        conexiones += "N" + (nodo.fila+50)+""+ nodo.columna + " -> N" + (nodo.arriba.fila+50)+""+ nodo.arriba.columna + ";\n"
-                    }
-                    if(nodo.abajo != null){
-                        conexiones += "N" + (nodo.fila+50)+""+ nodo.columna + " -> N" + (nodo.abajo.fila+50)+""+ nodo.abajo.columna + ";\n"
-                    }                    
-                    codigodot += "\n"+conexiones+"\n"
-                    var conexiones ="";
-                }
-                
-                
-            }
+        for (var i = 1; i < fila+1; i++) {   
             
-            var conexiones ="";
+            var nodo = this.buscar_nodo(i, 1);
+            var x = 1;
+            while(nodo != null){
+                if(nodo.nombre_libro != ""){
+
+                    //fila
+                    nodos += "fila" + x + "[label=\"" + x + "\"];\n";
+                    conexiones_filas += "fila" + x + "->N" +(nodo.fila+50) +""+nodo.columna + ";\n";
+                        
+                    //columna
+                    nodos += "colum" + i + "[label=\"" + i + "\"];\n";
+                    nodos += "N" + (nodo.fila+50) + ""+nodo.columna + "[label=\"" + nodo.nombre_libro + "\"];\n";
+                    conexiones += "colum" + i + "->N" + (nodo.fila+50) + ""+nodo.columna + ";\n";                    
+                    nodo = nodo.abajo;
+                    
+                }
+                else{
+                    nodo = nodo.derecha;
+                    x++;
+                }
+                // if(conexiones != ""){
+                // codigodot += "\n"+conexiones+"\n";
+                // conexiones ="";
+                // }
+            }
+           
         }
-        
+        codigodot += "{rank=same;\n"+conexiones_filas+"\n}\n";
+        codigodot += "\n"+conexiones+"\n"
         //agregando nodos
         codigodot += nodos+"\n"
         
         //agregando conexiones
         codigodot += "\n}"
         //console.log(codigodot)
+        console.log(codigodot);
 
         d3.select("#lienzo1").graphviz()
         .renderDot(codigodot)
@@ -223,42 +206,35 @@ class Lista {
     }
 
     leerJson(){
-        
-        var ayuda_fila = 0;
-        var ayuda_columna = 0;
+        var ayuda = this.primero;
+        var segundo = this.primero;
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
                 
                 var json = JSON.parse(this.responseText);
                 for (var i = 0; i < json.length; i++) {
-                    if(json[i].categoria == "Fantasia"){
-                       
-                        if(ayuda_fila <json[i].fila){
-                            if(ayuda_columna < json[i].columna){
-                                ayuda_fila = json[i].fila;
-                                ayuda_columna = json[i].columna;
-                            }else{
-                                ayuda_fila = json[i].fila;
-                            }
+                    if(json[i].categoria == "Thriller"){
+                        for (var j = 1; j < json[i].columna; j++) {
+                        
+                            ayuda = ayuda.derecha;
                         }
-                        else if(ayuda_columna < json[i].columna){
-                            ayuda_columna = json[i].columna;
-                            }
-                            else{
-                                continue;
-                            }
-
-                            lista.crearMatriz(ayuda_fila,ayuda_columna);
-                            lista.unir_nodos(ayuda_fila,ayuda_columna);
-                            lista.eliminar_finales(ayuda_fila);
-                            lista.leerJson();
-
+                        for (var k = 1; k < json[i].fila; k++) {
+                            ayuda = ayuda.abajo;
+                        }             
+                            ayuda.isbn = json[i].isbm;
+                            ayuda.nombre_autor = json[i].nombre_autor;
+                            ayuda.nombre_libro = json[i].nombre_libro;
+                            ayuda.cantidad = json[i].cantidad;
+                            ayuda.fila = json[i].fila;
+                            ayuda.columna = json[i].columna;
+                            ayuda.paginas = json[i].paginas;
+                            ayuda.categoria = json[i].categoria;                                          
+                            ayuda = segundo;
                         }
                         
                     }
-                    
-                     
+                    lista.graficar_octogonal(25,25);  
             }
         };      
         xhttp.open("GET", "libros.json", true);
@@ -270,9 +246,8 @@ class Lista {
 
 
 var lista = new Lista();
+lista.crearMatriz(25,25);
+lista.unir_nodos(25,25);
+lista.eliminar_finales(25);
 lista.leerJson();
-// lista.crearMatriz(25,25);
-// lista.unir_nodos(25,25);
-// lista.eliminar_finales(25);
-// lista.leerJson();
 
