@@ -144,7 +144,7 @@ class Lista_libros {
     }
 
     graficar_octogonal(fila, columna){
-        var codigodot = "digraph G{\nlabel=\" Clasificación Fantasia \";\nnode [shape=box];\n";        
+        var codigodot = "digraph G{bgcolor=none \n graph[size = \"11.70,6.25\" ]  \nlabel=\" Clasificación Fantasia \";\nnode [shape=box];\n";        
         var conexiones ="";
         var Nodo_libross ="";    
         
@@ -211,9 +211,11 @@ class Lista_libros {
         //agregando conexiones
         codigodot += "\n}"
         //console.log(codigodot)
-        
+        console.log(codigodot)
         d3.select("#lienzo1").graphviz()
-        .renderDot(codigodot)
+        
+        //cambiar tamaño de lienzo
+        .renderDot(codigodot);
         
     }
 
@@ -287,6 +289,26 @@ class Lista_libros {
             
         }
     
+
+        iniciar_lista(){
+            let json_fantasia = JSON.parse(localStorage.getItem("json_fantasia"));
+            if(json_fantasia != null){
+            this.crearMatriz(25,25);
+            this.unir_Nodo_libross(25,25);
+            this.eliminar_finales(25)
+            for (var i = 0; i < json_fantasia.length; i++) {
+                this.agregar_Nodo_libros(json_fantasia[i].isbm, json_fantasia[i].nombre_autor, json_fantasia[i].nombre_libro, json_fantasia[i].cantidad, json_fantasia[i].fila, json_fantasia[i].columna, json_fantasia[i].paginas, json_fantasia[i].categoria);
+            }
+            this.graficar_octogonal(25,25);
+            }
+            else{
+                this.crearMatriz(25,25);
+                this.unir_Nodo_libross(25,25);
+                this.eliminar_finales(25)
+                this.graficar_octogonal(25,25);
+            }
+        }
+    
 }
 
 var formulario = document.getElementById("lienzo1");
@@ -304,9 +326,9 @@ formulario.addEventListener('submit', function(e){
 
         let contenido = e.target.result;
         var json = JSON.parse(contenido);
-        //crear json
-
-        localStorage.setItem("json", contenido);
+        
+        //guarda el json en el localStorage
+        localStorage.setItem("json_fantasia", contenido);
         
         var Lista_libross = new Lista_libros();
 
@@ -322,9 +344,10 @@ formulario.addEventListener('submit', function(e){
         }
         Lista_libross.graficar_octogonal(25,25);        
         
-        
-
-        
     }
 
 })
+
+var usuario = new Lista_libros();
+usuario.iniciar_lista();
+

@@ -17,6 +17,11 @@ class Lista {
         this.ultimo = null;
     }
 
+    //insertar usuario predeterminado
+    insertar_predeterminado() {
+        this.insertar(2354168452525, "WIlfred Perez", "Wilfred", "Wilfred@gmail.com", "Administrador", "123", "+502 (123) 123-4567");
+    }
+
    //insertar usuario
    insertar(dpi, nombre, usuario, correo, rol, contraseña, telefono) {
        var nuevo = new Nodo(dpi, nombre, usuario, correo, rol, contraseña, telefono);
@@ -85,20 +90,63 @@ class Lista {
 var formulario = document.getElementById("lienzo2");
 formulario.addEventListener('submit', function(e){
     e.preventDefault();
-    console.log("Formulario enviado");
+    
     //recibir documento de formulario
+    
     let file = document.querySelector('#file');
-    let reader = new FileReader();
-    reader.readAsText(file.files[0]);
-    reader.onload = function(e){
-        let contenido = e.target.result;
-        var json = JSON.parse(contenido);
-        var lista = new Lista();
+    var lista = new Lista();
+    if (file == null){
+       
+    
+    //recibir datos de formulario
+    var datos = new FormData(document.getElementById("formulario"));
 
-        for (var i = 0; i < json.length; i++) {
-            lista.insertar(json[i].dpi, json[i].nombre_completo, json[i].nombre_usuario, json[i].correo, json[i].rol, json[i].contrasenia, json[i].telefono);
+    if(datos.get("user") == "" || datos.get("contraseña") == ""){
+        alert("No se puede dejar campos vacios");
+    }
+    else if(datos.get("user") == "Wilfred" && datos.get("contraseña") == "123"){
+        lista.insertar_predeterminado();
+        //enviar nuevo html
+        location.href = "/templates/admin.html";
+    }
+    else{
+        var opcion = false;
+        let json_usuarios = JSON.parse(localStorage.getItem("json_usuarios"));
+        if(json_usuarios != null){
+            for (var i = 0; i < json_usuarios.length; i++) {
+                if(datos.get("user") == json_usuarios[i].nombre_usuario && datos.get("contraseña") == json_usuarios[i].contrasenia){  
+                                            
+                    opcion = true;
+                    location.href = "/templates/libros_inicio.html";
+                }
+            }
+            if(opcion == false){
+                alert("Usuario o contraseña incorrectos");
+            }
+            
+        }else{
+            alert("Usuario o contraseña incorrectos :(");
         }
-        lista.graficar_lista();
+        
     }
 
+    }else{
+        let reader = new FileReader();
+        reader.readAsText(file.files[0]);
+        reader.onload = function(e){
+            let contenido = e.target.result;
+            var json = JSON.parse(contenido);
+
+            localStorage.setItem("json_usuarios", contenido);
+            
+    
+            for (var i = 0; i < json.length; i++) {
+                lista.insertar(json[i].dpi, json[i].nombre_completo, json[i].nombre_usuario, json[i].correo, json[i].rol, json[i].contrasenia, json[i].telefono);
+            }
+            lista.graficar_lista();
+        }
+    }
+
+
 })
+
