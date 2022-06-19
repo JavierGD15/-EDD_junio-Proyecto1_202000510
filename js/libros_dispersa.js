@@ -297,6 +297,52 @@ agregar_Nodo_thriller_libros(isbm, nombre_autor, nombre_libro, cantidad, fila, c
     ayuda.categoria = categoria;
     
 }
+enviar_tabla(){            
+            
+    for(var i=1; i<26; i++){             
+        for(var j=1; j<26; j++){
+            var ayuda = this.nueva_busqueda(i,j);
+            if(ayuda == null){
+                break
+            }else if(ayuda.nombre_autor ==null){
+                continue}
+                else{                    
+                    let tblDatos = document.getElementById("tblDatos").insertRow(-1);
+                    //insertar imagen
+                    let cellImg = tblDatos.insertCell(-1);
+                    let img = document.createElement("img");
+                    img.src = "../img/libro_rojo.jpg";
+                    img.width = "30";
+                    img.height = "30";
+                    cellImg.appendChild(img);
+                    let cell2 = tblDatos.insertCell(-1);
+                    let cell3 = tblDatos.insertCell(-1);
+                    let cell4 = tblDatos.insertCell(-1);
+                    let cell5 = tblDatos.insertCell(-1);
+                    let cell6 = tblDatos.insertCell(-1);         
+                    //enviar boton
+                    let cell7 = tblDatos.insertCell(-1);
+                    let btn = document.createElement("button");
+                    btn.innerHTML = "Comprar";
+                    btn.setAttribute("type", "submit");
+                    btn.setAttribute("onclick", "alert('hola')");
+                    cell7.appendChild(btn);     
+                    
+                    cell2.innerHTML = ayuda.categoria;
+                    cell3.innerHTML = ayuda.nombre_libro;
+                    cell4.innerHTML = ayuda.nombre_autor;
+                    cell5.innerHTML = ayuda.paginas;
+                    cell6.innerHTML = ayuda.cantidad;
+                }
+        }
+    }
+    
+   
+
+}
+
+
+
 iniciar_lista(){
     let json_fantasia = JSON.parse(localStorage.getItem("json_Thriller"));
     if(json_fantasia != null){
@@ -304,8 +350,10 @@ iniciar_lista(){
     this.unir_Nodo_thriller_libross(25,25);
     this.eliminar_finales(25)
     for (var i = 0; i < json_fantasia.length; i++) {
-        this.agregar_Nodo_thriller_libros(json_fantasia[i].isbm, json_fantasia[i].nombre_autor, json_fantasia[i].nombre_libro, json_fantasia[i].cantidad, json_fantasia[i].fila, json_fantasia[i].columna, json_fantasia[i].paginas, json_fantasia[i].categoria);
-    }
+        if(json_fantasia[i].categoria == "Thriller"){
+            this.agregar_Nodo_thriller_libros(json_fantasia[i].isbm, json_fantasia[i].nombre_autor, json_fantasia[i].nombre_libro, json_fantasia[i].cantidad, json_fantasia[i].fila, json_fantasia[i].columna, json_fantasia[i].paginas, json_fantasia[i].categoria);
+          }
+          }
     this.graficar_octogonal(25,25);
     }
     else{
@@ -336,7 +384,7 @@ formulario.addEventListener('submit', function(e){
         Lista_thriller_libross.eliminar_finales(25);
 
         for (var i = 0; i < json.length; i++) {
-            if(json[i].categoria == "Thriller"){
+            if(json[i].categoria == "Thrille"){
                 
                 Lista_thriller_libross.agregar_Nodo_thriller_libros(json[i].isbm, json[i].nombre_autor, json[i].nombre_libro, json[i].cantidad, json[i].fila, json[i].columna, json[i].paginas, json[i].categoria);                   
             }
@@ -348,3 +396,4 @@ formulario.addEventListener('submit', function(e){
 
 var dispersa = new Lista_thriller();
 dispersa.iniciar_lista();
+dispersa.enviar_tabla();

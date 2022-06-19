@@ -295,8 +295,9 @@ class Lista_libros {
             this.unir_Nodo_libross(25,25);
             this.eliminar_finales(25)
             for (var i = 0; i < json_fantasia.length; i++) {
+                if(json_fantasia[i].categoria == "Fantasia"){
                 this.agregar_Nodo_libros(json_fantasia[i].isbm, json_fantasia[i].nombre_autor, json_fantasia[i].nombre_libro, json_fantasia[i].cantidad, json_fantasia[i].fila, json_fantasia[i].columna, json_fantasia[i].paginas, json_fantasia[i].categoria);
-            }
+            }}
             this.graficar_octogonal(25,25);
             }
             else{
@@ -305,6 +306,54 @@ class Lista_libros {
                 this.eliminar_finales(25)
                 this.graficar_octogonal(25,25);
             }
+        }
+
+        enviar_tabla(){
+            
+            
+            for(var i=1; i<26; i++){
+                     
+                for(var j=1; j<26; j++){
+                    var ayuda = this.nueva_busqueda(i,j);
+                    if(ayuda == null){
+                        break
+                    }else if(ayuda.nombre_autor ==""){
+                        continue}
+                        else{
+                            
+                            let tblDatos = document.getElementById("tblDatos").insertRow(-1);
+                            //insertar imagen
+                            let cellImg = tblDatos.insertCell(-1);
+                            let img = document.createElement("img");
+                            img.src = "../img/libro.png";
+                            img.width = "30";
+                            img.height = "30";
+                            cellImg.appendChild(img);
+                            
+                            let cell2 = tblDatos.insertCell(-1);
+                            let cell3 = tblDatos.insertCell(-1);
+                            let cell4 = tblDatos.insertCell(-1);
+                            let cell5 = tblDatos.insertCell(-1);
+                            let cell6 = tblDatos.insertCell(-1);                  
+                            
+                            cell2.innerHTML = ayuda.categoria;
+                            cell3.innerHTML = ayuda.nombre_libro;
+                            cell4.innerHTML = ayuda.nombre_autor;
+                            cell5.innerHTML = ayuda.paginas;
+                            cell6.innerHTML = ayuda.cantidad;
+                            //enviar boton
+                    let cell7 = tblDatos.insertCell(-1);
+                    let btn = document.createElement("button");
+                    btn.innerHTML = "Comprar";
+                    btn.setAttribute("type", "submit");
+                    btn.setAttribute("onclick", "alert('hola'+"+i+"+"+j+")");
+                    cell7.appendChild(btn);     
+                        }
+                }
+            }
+            
+           
+
         }
     
 }
@@ -347,5 +396,7 @@ formulario.addEventListener('submit', function(e){
 })
 
 var usuario = new Lista_libros();
+
 usuario.iniciar_lista();
+usuario.enviar_tabla();
 

@@ -115,13 +115,46 @@ class Arbol{
     iniciar_lista(){
         let json_fantasia = JSON.parse(localStorage.getItem("json_autores"));
         if(json_fantasia != null){
-            var arbol = new Arbol();
+            
         for (var i = 0; i < json_fantasia.length; i++) {
-            arbol.insertar(json_fantasia[i].dpi, json_fantasia[i].nombre_autor, json_fantasia[i].correo, json_fantasia[i].telefono, json_fantasia[i].direccion, json_fantasia[i].biografia);
+            this.insertar(json_fantasia[i].dpi, json_fantasia[i].nombre_autor, json_fantasia[i].correo, json_fantasia[i].telefono, json_fantasia[i].direccion, json_fantasia[i].biografia);
         }
-        arbol.graficar();
+        this.graficar();
+        return this.raiz;
         }
         
+    }
+    enviar_tabla(raiz){
+        if (raiz != null) {
+            let tblDatos = document.getElementById("tblautores").insertRow(-1);
+            //insertar imagen
+            let cellImg = tblDatos.insertCell(-1);
+            let img = document.createElement("img");
+            img.src = "../img/pro.jpg";
+            img.width = "100";
+            img.height = "100";
+            cellImg.appendChild(img);
+            let cell2 = tblDatos.insertCell(-1);
+            let cell3 = tblDatos.insertCell(-1);
+            let cell4 = tblDatos.insertCell(-1);
+            let cell5 = tblDatos.insertCell(-1);
+            
+            let cell7 = tblDatos.insertCell(-1);  
+
+            cell2.innerHTML = raiz.nombre_autor;
+            cell3.innerHTML = raiz.correo;
+            cell4.innerHTML = raiz.telefono;
+            cell5.innerHTML = raiz.direccion;
+            
+            cell7.innerHTML = raiz.dpi;
+            
+            this.enviar_tabla(raiz.izquierda);
+            this.enviar_tabla(raiz.derecha);
+        }            
+        
+        
+       
+
     }
 
 }
@@ -149,7 +182,8 @@ formulario.addEventListener('submit', function(e){
 })
 
 var auto = new Arbol();
-auto.iniciar_lista();
+
+auto.enviar_tabla(auto.iniciar_lista());
 
 
 
