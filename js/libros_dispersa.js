@@ -144,70 +144,116 @@ unir_Nodo_thriller_libross(fila, columna) {
     }
 
     graficar_octogonal(fila, columna){
-        var codigodot = "digraph G{\nlabel=\" Clasificación Fantasia \";\nnode [shape=box];\n";        
-        var conexiones ="";
+        var codigodot = "digraph G{bgcolor=none \n graph[size = \"11.70,6.25\" ]\n edge[dir = \"both\"] \nlabel=\" Clasificación Fantasia \";\nnode [shape=box];\n";        
+        var conexiones_filas ="";
+        var conexiones_columnas ="";
         var Nodo_thrillers ="";
-        
-
+        var ayuda1 = "";
+        var inicio1 = 0;
+        var ayuda2 = "";
+        var inicio5 = 0;
         for (var i = 1; i < fila+1; i++) {
-            //filas
+            var ayuda = this.primero;
+            var inicio = 0;            
+            
             for (var j = 1; j < columna+1; j++) {
+                //filas
                 var Nodo_thriller = this.nueva_busqueda(i, j);
                 if(Nodo_thriller == null){
                     continue;
-                }else{
-                    Nodo_thrillers+=  "N" + Nodo_thriller.fila+""+ Nodo_thriller.columna+ "[label=\"" + Nodo_thriller.fila+""+ Nodo_thriller.columna + "\" ];\n";
-
-                    if(Nodo_thriller.izquierda != null){
+                }else if(Nodo_thriller.nombre_libro == null){
                     
-                        conexiones += "N" + Nodo_thriller.fila+""+ Nodo_thriller.columna + " -> N" + Nodo_thriller.izquierda.fila+""+ Nodo_thriller.izquierda.columna + ";\n"
+                    continue;
+                }
+                else{
+                    if(inicio == 0){
+                        if(inicio1==0){
+                            Nodo_thrillers +=  "N" +( Nodo_thriller.fila+50)+""+ Nodo_thriller.columna+ "[label=\"" + Nodo_thriller.nombre_libro + "\" ];\n";
+                            Nodo_thrillers +=  "fila" + i + "[label=\"" + i + "\"];\n";
+                            conexiones_filas += "fila" + i + "->N" +( Nodo_thriller.fila+50)+""+ Nodo_thriller.columna + ";\n"; 
+                            ayuda = Nodo_thriller;
+                            inicio = 1;
+                            ayuda1 = "fila"+i+"";
+                            inicio1 = 1;
+                        }
+                        else{
+                        Nodo_thrillers +=  "N" +( Nodo_thriller.fila+50)+""+ Nodo_thriller.columna+ "[label=\"" + Nodo_thriller.nombre_libro + "\" ];\n";
+                        Nodo_thrillers +=  "fila" + i + "[label=\"" + i + "\"];\n";
+                        conexiones_filas += "fila" + i + "->N" +( Nodo_thriller.fila+50)+""+ Nodo_thriller.columna + ";\n";  
+                        codigodot += ayuda1 + "->fila" +i + ";\n";
+                        ayuda1 = "fila"+i+"";                      
+                        ayuda = Nodo_thriller;
+                        inicio = 1;
                     }
-                    if(Nodo_thriller.derecha != null){
-                        conexiones += "N" + Nodo_thriller.fila+""+ Nodo_thriller.columna + " -> N" + Nodo_thriller.derecha.fila+""+ Nodo_thriller.derecha.columna + ";\n"
+                    }else{
+                        Nodo_thrillers +=  "N" +( Nodo_thriller.fila+50)+""+ Nodo_thriller.columna+ "[label=\"" + Nodo_thriller.nombre_libro + "\" ];\n";
+                        conexiones_filas += "N" +( ayuda.fila+50)+""+ ayuda.columna + "->N" +( Nodo_thriller.fila+50)+""+ Nodo_thriller.columna + ";\n";
+                        ayuda = Nodo_thriller;  
                     }
+                   
                     
 
                 }
                 
                 
             }
+            if(conexiones_filas != ""){
+                codigodot += "{rank=same;\n"+conexiones_filas+"\n}\n";
             
-            codigodot += "{rank=same;\n"+conexiones+"\n}\n";
-            var conexiones ="";
-
-            //columnas
-            for (var j = 1; j < columna+1; j++) {
-                var Nodo_thriller = this.nueva_busqueda(i, j);
-                if(Nodo_thriller == null){
-                    continue;
-                }else{
-                    Nodo_thrillers+=  "N" + Nodo_thriller.fila+""+ Nodo_thriller.columna+ "[label=\"" + Nodo_thriller.fila+""+ Nodo_thriller.columna + "\" ];\n";
-
-                    
-                    if(Nodo_thriller.arriba != null){
-                        conexiones += "N" + Nodo_thriller.fila+""+ Nodo_thriller.columna + " -> N" + Nodo_thriller.arriba.fila+""+ Nodo_thriller.arriba.columna + ";\n"
-                    }
-                    if(Nodo_thriller.abajo != null){
-                        conexiones += "N" + Nodo_thriller.fila+""+ Nodo_thriller.columna + " -> N" + Nodo_thriller.abajo.fila+""+ Nodo_thriller.abajo.columna + ";\n"
-                    }
-                    
-                    codigodot += "\n"+conexiones+"\n"
-                    var conexiones ="";
-
-                }
-                
-                
+                var conexiones_filas ="";
             }
             
-            var conexiones ="";
+            
+            
         }
+        for (var i = 1; i < columna+1; i++) {
+            var alerta = 0;
+            var ayuda_nodo = this.primero;
+            var Nodo_thriller = this.nueva_busqueda(1, i);
+            while(Nodo_thriller != null){
+                if(Nodo_thriller.nombre_libro != null){
+                    if(alerta == 0){
+                        if(inicio5==0){
+                        Nodo_thrillers += "colum" + i + "[label=\"" + i + "\"];\n";
+                        ayuda2 = "colum"+i+"";
+                        codigodot += "colum" + i + "->N" +( Nodo_thriller.fila+50)+""+ Nodo_thriller.columna + ";\n"; 
+                        alerta = 1;
+                        ayuda_nodo = Nodo_thriller;
+                        Nodo_thriller = Nodo_thriller.abajo;
+                        inicio5 = 1;
+
+                        }else{
+                        Nodo_thrillers += "colum" + i + "[label=\"" + i + "\"];\n";                        
+                        codigodot += "colum" + i + "->N" +( Nodo_thriller.fila+50)+""+ Nodo_thriller.columna + ";\n";
+                        conexiones_columnas += ayuda2 + "->colum" + i + ";\n"; 
+                        ayuda2 = "colum"+i+"";
+                        alerta = 1;
+                        ayuda_nodo = Nodo_thriller;
+                        Nodo_thriller = Nodo_thriller.abajo;
+
+                        }
+                        
+                    }else{
+                        console.log("entro");
+                        codigodot += "N" + ( ayuda_nodo.fila+50)+""+ ayuda_nodo.columna + "->N" +( Nodo_thriller.fila+50)+""+ Nodo_thriller.columna + ";\n";
+                        ayuda_nodo = Nodo_thriller; 
+                        Nodo_thriller = Nodo_thriller.abajo;
+                    }
+                }else{
+                    Nodo_thriller = Nodo_thriller.abajo;
+                }
+            }
+
+
+        }
+        codigodot += "{rank=same;\n"+conexiones_columnas+"\n}\n";
         
         //agregando Nodo_thrillers
         codigodot += Nodo_thrillers+"\n"
         
         //agregando conexiones
         codigodot += "\n}"
-        console.log(codigodot)
+        
         d3.select("#lienzo3").graphviz()
         .renderDot(codigodot)
         
@@ -251,6 +297,24 @@ agregar_Nodo_thriller_libros(isbm, nombre_autor, nombre_libro, cantidad, fila, c
     ayuda.categoria = categoria;
     
 }
+iniciar_lista(){
+    let json_fantasia = JSON.parse(localStorage.getItem("json_Thriller"));
+    if(json_fantasia != null){
+    this.crearMatriz(25,25);
+    this.unir_Nodo_thriller_libross(25,25);
+    this.eliminar_finales(25)
+    for (var i = 0; i < json_fantasia.length; i++) {
+        this.agregar_Nodo_thriller_libros(json_fantasia[i].isbm, json_fantasia[i].nombre_autor, json_fantasia[i].nombre_libro, json_fantasia[i].cantidad, json_fantasia[i].fila, json_fantasia[i].columna, json_fantasia[i].paginas, json_fantasia[i].categoria);
+    }
+    this.graficar_octogonal(25,25);
+    }
+    else{
+        this.crearMatriz(25,25);
+        this.unir_Nodo_thriller_libross(25,25);
+        this.eliminar_finales(25)
+        this.graficar_octogonal(25,25);
+    }
+}
 }
 var formulario = document.getElementById("lienzo3");
 
@@ -264,6 +328,7 @@ formulario.addEventListener('submit', function(e){
     reader.onload = function(e){
         let contenido = e.target.result;
         var json = JSON.parse(contenido);
+        localStorage.setItem("json_Thriller", contenido);
         var Lista_thriller_libross = new Lista_thriller();
 
         Lista_thriller_libross.crearMatriz(25,25);
@@ -272,7 +337,7 @@ formulario.addEventListener('submit', function(e){
 
         for (var i = 0; i < json.length; i++) {
             if(json[i].categoria == "Thriller"){
-                console.log("entro");
+                
                 Lista_thriller_libross.agregar_Nodo_thriller_libros(json[i].isbm, json[i].nombre_autor, json[i].nombre_libro, json[i].cantidad, json[i].fila, json[i].columna, json[i].paginas, json[i].categoria);                   
             }
         }
@@ -280,3 +345,6 @@ formulario.addEventListener('submit', function(e){
         
     }
 })
+
+var dispersa = new Lista_thriller();
+dispersa.iniciar_lista();

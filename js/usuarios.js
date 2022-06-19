@@ -115,9 +115,14 @@ formulario.addEventListener('submit', function(e){
         if(json_usuarios != null){
             for (var i = 0; i < json_usuarios.length; i++) {
                 if(datos.get("user") == json_usuarios[i].nombre_usuario && datos.get("contraseña") == json_usuarios[i].contrasenia){  
-                                            
-                    opcion = true;
+                    if(json_usuarios[i].rol =="Administrador"){
+                        location.href = "/templates/admin.html";
+                        opcion = true;
+                    }else{
+                        opcion = true;
                     location.href = "/templates/libros_inicio.html";
+                    }                     
+                    
                 }
             }
             if(opcion == false){

@@ -210,8 +210,6 @@ class Lista_libros {
         
         //agregando conexiones
         codigodot += "\n}"
-        //console.log(codigodot)
-        console.log(codigodot)
         d3.select("#lienzo1").graphviz()
         
         //cambiar tamaño de lienzo

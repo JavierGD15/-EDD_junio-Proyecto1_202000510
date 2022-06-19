@@ -43,7 +43,7 @@ body{
     padding: 30px;
     background: #fff;
     padding-bottom: 40px;
-    left: -150px;
+    left: -80px;
 }
 #radio1,#radio2,#radio3,#radio4{
     display: none;
@@ -74,7 +74,7 @@ body{
     left: 450px;
 }
 .content .tab4:after{
-    left: 600px;
+    left: 580px;
 }
 
 #table, th, td{
@@ -143,15 +143,6 @@ border-collapse: value;
     display: inline-block;
   }
 
-
-
-
-
-
-
-  
-      
-        
   .file-select1 {
     position: relative;
     display: inline-block;
@@ -245,6 +236,12 @@ border-collapse: value;
 	top:1px;
 }
 #lienzo1{
+    background-image: url('../img/estante.jpg');
+    background-size: cover;
+    size: 100%;
+}
+   
+#lienzo3{
     background-image: url('../img/estante.jpg');
     background-size: cover;
     size: 100%;

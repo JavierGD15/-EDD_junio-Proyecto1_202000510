@@ -94,13 +94,12 @@ class Arbol{
         codigodot += "\n"+this.texto+"\n";
         
         codigodot += "}";
-        console.log(codigodot);
+        
         d3.select("#lienzo4").graphviz()
         .renderDot(codigodot)
     }
     
     graficar_lados(nodo){
-        console.log("entro");
         this.texto += nodo.dpi + " [label=\"" + nodo.nombre_autor + "\"];\n";
         if(nodo.izquierda != null){
             this.texto += nodo.dpi + " -> " + nodo.izquierda.dpi+ ";\n";
