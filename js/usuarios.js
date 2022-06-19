@@ -107,7 +107,7 @@ formulario.addEventListener('submit', function(e){
     else if(datos.get("user") == "Wilfred" && datos.get("contraseña") == "123"){
         lista.insertar_predeterminado();
         //enviar nuevo html
-        location.href = "/templates/admin.html";
+        location.href = "templates/admin.html";
     }
     else{
         var opcion = false;
@@ -116,11 +116,11 @@ formulario.addEventListener('submit', function(e){
             for (var i = 0; i < json_usuarios.length; i++) {
                 if(datos.get("user") == json_usuarios[i].nombre_usuario && datos.get("contraseña") == json_usuarios[i].contrasenia){  
                     if(json_usuarios[i].rol =="Administrador"){
-                        location.href = "/templates/admin.html";
+                        location.href = "templates/admin.html";
                         opcion = true;
                     }else{
                         opcion = true;
-                    location.href = "/templates/libros_inicio.html";
+                    location.href = "templates/libros_inicio.html";
                     }                     
                     
                 }
