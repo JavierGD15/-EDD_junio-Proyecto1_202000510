@@ -250,7 +250,6 @@ formulario.addEventListener('submit', function(e){
             for (var i = 0; i < json.length; i++) {
                 lista.insertar(json[i].dpi, json[i].nombre_completo, json[i].nombre_usuario, json[i].correo, json[i].rol, json[i].contrasenia, json[i].telefono);
             }
-            lista.unir_libros();
             lista.graficar_lista();
         }
     }
