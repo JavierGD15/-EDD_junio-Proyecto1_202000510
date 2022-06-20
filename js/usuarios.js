@@ -1,3 +1,13 @@
+class Nodo_compras{
+    constructor(nombre_usuario,repeticiones) {        
+        this.nombre_usuario = nombre_usuario;
+        this.repeticiones = repeticiones;        
+        this.siguiente = null;
+    }
+}
+
+
+
 class Nodo {
     constructor(dpi, nombre, usuario, correo, rol, contraseña, telefono) {
         this.dpi = dpi;
@@ -7,6 +17,7 @@ class Nodo {
         this.rol = rol;
         this.contraseña = contraseña;
         this.telefono = telefono;
+        this.libros = null;
         this.siguiente = null;
     }
 }
@@ -15,6 +26,9 @@ class Lista {
     constructor() {
         this.primero = null;
         this.ultimo = null;
+
+        this.primero_compras = null;
+        this.ultimo_compras = null;
     }
 
     //insertar usuario predeterminado
@@ -73,16 +87,102 @@ class Lista {
         var actual = this.primero.siguiente;
         var detener = this.primero;
         var recto = "";
+
+        
+
+        //fila
         recto += detener.dpi + " [label=\"" + detener.nombre +"\n"+ detener.correo + "\"];";
         while (actual != detener) {
             codigodot += actual.dpi + " [label=\"" + actual.nombre +"\n"+ actual.correo + "\"];";
             recto += actual.dpi + " -> " + actual.siguiente.dpi+ ";";
             actual = actual.siguiente;
         }
+
         codigodot += "{rank=same;\n"+recto+"\n}\n";
+        var recto = "";
+        var actual = this.primero.siguiente;
+        var detener = this.primero;
+
+        if (detener.libros != null){
+            var libro = detener.libros;
+            var x = 0;
+            recto += detener.dpi + " -> " + x+libro.nombre_usuario+ ";";
+            while(libro !=null){
+                //columna
+                recto += x+libro.nombre_usuario+ " [label=\"" + libro.nombre_libro+ "\"];";
+                recto += x+libro.nombre_usuario+ " -> " + (x+1)+libro.nombre_usuario+ ";";
+                x++;
+                libro = libro.siguiente;
+            }
+            
+        }
+        
+        while (actual != detener) {
+            if (actual.libros != null){
+                var libro = actual.libros;
+                var x = 0;
+                recto += actual.dpi + " -> " + x+libro.nombre_usuario+ ";";
+                while(libro !=null){
+                    //columna
+                    recto += x+libro.nombre_usuario+ " [label=\"" + libro.nombre_libro+ "\"];";
+                    recto += x+libro.nombre_usuario + " -> " + (x+1)+libro.nombre_usuario+ ";";
+                    x++;
+                    libro = libro.siguiente;
+                }
+                actual = actual.siguiente;
+            }
+            actual = actual.siguiente;
+        }
+
+
+
+
+        recto += actual.dpi + " -> " + actual.siguiente.dpi+ ";";
+        codigodot += "\n"+recto+"\n";
         codigodot += "}";
+        console.log(codigodot);
         d3.select("#lienzo2").graphviz()
         .renderDot(codigodot)
+    }
+    insertar_compras(nombre,libro){
+        var nuevo = new Nodo_compras(nombre,libro);
+        if (this.primero_compras == null) {
+                this.primero_compras = nuevo;
+                this.ultimo_compras = nuevo;
+            } 
+            
+            
+            else {
+                this.ultimo_compras.siguiente = nuevo;
+                this.ultimo_compras = nuevo;                
+            }
+    }
+
+    unir_libros(){
+        var compras = JSON.parse(localStorage.getItem("json_compras"));
+        var primero = this.primero.siguiente;
+        var actual = this.primero;
+
+        for(var i = 0; i < compras.length; i++){
+            if(compras[i].nombre_usuario == actual.usuario){
+                this.insertar_compras(compras[i].nombre_usuario,compras[i].nombre_libro);                    
+            }
+        }
+        actual.libros = this.primero_compras;
+        this.primero_compras = null;
+        this.ultimo_compras = null;
+
+        while(primero != actual){
+            for(var i = 0; i < compras.length; i++){
+                if(compras[i].nombre_usuario == primero.usuario){
+                    this.insertar_compras(compras[i].nombre_usuario,compras[i].nombre_libro);                    
+                }
+            }
+            primero.libros = this.primero_compras;
+            this.primero_compras = null;
+            this.ultimo_compras = null;
+            primero = primero.siguiente;
+        }
     }
    
 }
@@ -116,10 +216,12 @@ formulario.addEventListener('submit', function(e){
             for (var i = 0; i < json_usuarios.length; i++) {
                 if(datos.get("user") == json_usuarios[i].nombre_usuario && datos.get("contraseña") == json_usuarios[i].contrasenia){  
                     if(json_usuarios[i].rol =="Administrador"){
+                        
                         location.href = "templates/admin.html";
                         opcion = true;
                     }else{
                         opcion = true;
+                        localStorage.setItem("usuario_activo", json_usuarios[i].nombre_usuario);
                     location.href = "templates/libros_inicio.html";
                     }                     
                     
@@ -148,6 +250,7 @@ formulario.addEventListener('submit', function(e){
             for (var i = 0; i < json.length; i++) {
                 lista.insertar(json[i].dpi, json[i].nombre_completo, json[i].nombre_usuario, json[i].correo, json[i].rol, json[i].contrasenia, json[i].telefono);
             }
+            lista.unir_libros();
             lista.graficar_lista();
         }
     }

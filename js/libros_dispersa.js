@@ -1,3 +1,11 @@
+class Nodo_pila_2 {
+    constructor(numero) {
+        this.numero = numero;
+        this.id = null;
+        this.siguiente = null;
+    }
+}
+
 class Nodo_thriller {
     constructor(isbn, nombre_autor, nombre_libro, cantidad, fila, columna, paginas, categoria) {
         this.isbn = isbn;
@@ -20,6 +28,9 @@ class Lista_thriller {
     constructor() {
         this.primero = null;
         this.ultimo = null;
+
+        this.primero_pila = null;
+        this.ultimo_pila = null;
     }
     insertar(fila, columna) {
         var nuevo = new Nodo_thriller(null, null, null, null, fila, columna, null, null);
@@ -325,7 +336,7 @@ enviar_tabla(){
                     let btn = document.createElement("button");
                     btn.innerHTML = "Comprar";
                     btn.setAttribute("type", "submit");
-                    btn.setAttribute("onclick", "alert('hola')");
+                    btn.setAttribute("onclick", "comprar_libro("+i+","+j+")");
                     cell7.appendChild(btn);     
                     
                     cell2.innerHTML = ayuda.categoria;
@@ -333,11 +344,116 @@ enviar_tabla(){
                     cell4.innerHTML = ayuda.nombre_autor;
                     cell5.innerHTML = ayuda.paginas;
                     cell6.innerHTML = ayuda.cantidad;
+                    let cell8 = tblDatos.insertCell(-1);
+                    let btn1 = document.createElement("button");
+                    btn1.innerHTML = "Pila";
+                    btn1.setAttribute("type", "submit");
+                   
+
+                    btn1.setAttribute("onclick", "pila("+i+","+j+")");
+                    cell8.appendChild(btn1);  
                 }
         }
     }
     
    
+
+}
+
+comprar_libro(fila, columna){
+    let compra = [];
+    let agregar ={};
+    var ayuda = this.nueva_busqueda(fila,columna);
+    let usuario = localStorage.getItem("usuario_activo");
+    let compras = JSON.parse(localStorage.getItem("json_compras"));
+    let realizadas = JSON.parse(localStorage.getItem("json_realizadas"));
+
+    if(realizadas == null){
+        agregar.nombre_usuario = usuario;
+        agregar.cantidad = 1;
+        compra.push(agregar);
+        localStorage.setItem("json_realizadas", JSON.stringify(compra));
+    }
+    else{
+        var bandera = false;
+        for (var i = 0; i < realizadas.length; i++) {
+            if(realizadas[i].nombre_usuario == usuario){
+                realizadas[i].cantidad = realizadas[i].cantidad + 1;
+                localStorage.setItem("json_realizadas", JSON.stringify(realizadas));
+                bandera = true;
+                break;
+            }
+            
+        }
+        if(bandera == false){
+            
+                agregar.nombre_usuario = usuario;
+                agregar.cantidad = 1;
+                realizadas.push(agregar);
+                localStorage.setItem("json_realizadas", JSON.stringify(realizadas));
+            
+        }
+        
+    }
+    compra = [];
+    agregar ={};
+    
+    if(ayuda.cantidad > 0){
+        if(compras != null){
+        ayuda.cantidad = ayuda.cantidad - 1; 
+        agregar.nombre_libro = ayuda.nombre_libro;  
+        agregar.nombre_usuario = usuario; 
+        console.log(agregar);
+        compras.push(agregar);
+        localStorage.setItem("json_compras", JSON.stringify(compras));
+        alert("Se ha comprado el libro");
+        this.escribir_json();
+        location.reload();
+        }else{
+            agregar.nombre_libro = ayuda.nombre_libro;  
+            agregar.nombre_usuario = usuario; 
+            console.log(agregar);
+            compra.push(agregar);
+            localStorage.setItem("json_compras", JSON.stringify(compra));
+            alert("Se ha comprado el libro");
+            this.escribir_json();
+            location.reload();
+        }
+    }else{
+        
+        alert("No hay libros disponibles");
+    }
+}
+
+
+escribir_json(){
+    //escribir json
+    let libros = {};
+    let json_fantasia = [];
+    for(var i=1; i<26; i++){
+        for(var j=1; j<26; j++){
+            var ayuda = this.nueva_busqueda(i,j);
+            if(ayuda == null){
+                break
+            }else if(ayuda.nombre_autor ==null){
+                continue}
+                else{
+                    libros.isbn = ayuda.isbn;                            
+                    libros.nombre_autor = ayuda.nombre_autor;
+                    libros.nombre_libro = ayuda.nombre_libro;
+                    libros.cantidad = ayuda.cantidad;
+                    libros.fila = ayuda.fila;
+                    libros.columna = ayuda.columna;
+                    libros.paginas = ayuda.paginas;
+                    libros.categoria = ayuda.categoria;                            
+                    json_fantasia.push(libros);
+                    libros = {};
+                    
+                }
+        }
+        
+    }console.log(json_fantasia);
+    localStorage.setItem("json_Thriller", JSON.stringify(json_fantasia));
 
 }
 
@@ -351,7 +467,7 @@ iniciar_lista(){
     this.eliminar_finales(25)
     for (var i = 0; i < json_fantasia.length; i++) {
         if(json_fantasia[i].categoria == "Thriller"){
-            this.agregar_Nodo_thriller_libros(json_fantasia[i].isbm, json_fantasia[i].nombre_autor, json_fantasia[i].nombre_libro, json_fantasia[i].cantidad, json_fantasia[i].fila, json_fantasia[i].columna, json_fantasia[i].paginas, json_fantasia[i].categoria);
+            this.agregar_Nodo_thriller_libros(json_fantasia[i].isbn, json_fantasia[i].nombre_autor, json_fantasia[i].nombre_libro, json_fantasia[i].cantidad, json_fantasia[i].fila, json_fantasia[i].columna, json_fantasia[i].paginas, json_fantasia[i].categoria);
           }
           }
     this.graficar_octogonal(25,25);
@@ -363,6 +479,94 @@ iniciar_lista(){
         this.graficar_octogonal(25,25);
     }
 }
+
+
+
+agregar_pila(numero) {
+    var nuevo = new Nodo_pila_2(numero);
+    if (this.primero_pila == null) {
+        this.primero_pila = nuevo;   
+        this.primero_pila.id = this.x;        
+        this.ultimo = nuevo;            
+        this.x++;
+       
+    } else {          
+        this.primero_pila = nuevo;
+        this.primero_pila.id = this.x;
+        this.primero_pila.siguiente = this.ultimo;
+        this.ultimo = nuevo;  
+        this.x++;
+    }
+}
+imprimir_grap(linea) {
+      
+    var conexiones ="";
+    var nodos ="";
+    var actual = this.primero_pila;
+    var codigodot = "";
+
+
+    
+    while (actual != null) {
+    nodos+=  "N"+linea+"" + actual.numero+ "[label=\"" + actual.numero + "\" ];\n";   
+    if (actual.siguiente != null) {
+        conexiones += "N"+linea +"" + actual.numero + "->N"+linea +"" + (actual.siguiente.numero) +";\n";
+        actual = actual.siguiente;
+    }else{
+        actual = actual.siguiente;
+    }
+    
+    
+    
+
+}
+
+codigodot += nodos+"\n";
+///conexiones += "N"+linea +"" + actual.id + "->N"+(linea+1) +"" + (actual.id)+";\n";
+codigodot += "\n"+conexiones+"\n";
+return codigodot;
+}
+
+cambios_pila() {
+    var ayuda = this.primero_pila;
+    var cantidad = 0;
+    var codigodot = "digraph G{\nlabel=\"  Cola  \";\nnode [shape=box];\n";        
+    var conexiones ="";
+    var nodos ="";
+    codigodot += this.imprimir_grap(77);
+    
+        
+    //agregando conexiones
+    codigodot += "\n}"
+    console.log(codigodot)
+    
+        
+    d3.select("#lienzo70").graphviz()
+    .renderDot(codigodot)
+    
+      
+}
+
+pila(fila, columna){
+    var ayuda = this.nueva_busqueda(fila,columna);
+    this.primero_pila = null;
+    this.ultimo_pila = null;
+    //for que disminuye 
+    if(ayuda.cantidad > 0){
+    for(var i=1; i<ayuda.cantidad+1; i++){
+        this.agregar_pila(i);
+    }
+
+    
+    this.agregar_pila(ayuda.nombre_libro);
+    this.cambios_pila();
+    }else{
+        alert("No hay libros disponibles");
+    }
+   
+}
+
+
 }
 var formulario = document.getElementById("lienzo3");
 
@@ -386,7 +590,7 @@ formulario.addEventListener('submit', function(e){
         for (var i = 0; i < json.length; i++) {
             if(json[i].categoria == "Thrille"){
                 
-                Lista_thriller_libross.agregar_Nodo_thriller_libros(json[i].isbm, json[i].nombre_autor, json[i].nombre_libro, json[i].cantidad, json[i].fila, json[i].columna, json[i].paginas, json[i].categoria);                   
+                Lista_thriller_libross.agregar_Nodo_thriller_libros(json[i].isbn, json[i].nombre_autor, json[i].nombre_libro, json[i].cantidad, json[i].fila, json[i].columna, json[i].paginas, json[i].categoria);                   
             }
         }
         Lista_thriller_libross.graficar_octogonal(25,25);
@@ -397,3 +601,11 @@ formulario.addEventListener('submit', function(e){
 var dispersa = new Lista_thriller();
 dispersa.iniciar_lista();
 dispersa.enviar_tabla();
+function comprar_libro(fila, columna){
+    dispersa.comprar_libro(fila, columna);
+}
+
+function pila(fila, columna){
+    
+    dispersa.pila(fila, columna);
+}
